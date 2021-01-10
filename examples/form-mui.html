@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons" rel="stylesheet">
+    <link crossorigin="anonymous"
+          href="https://unpkg.com/bootstrap-material-design@4.1.1/dist/css/bootstrap-material-design.min.css"
+          integrity="sha384-wXznGJNEXNG1NFsbm0ugrLFMQPWswR3lds2VeinahP8N0zJw9VWSopbjv2x7WCvX" rel="stylesheet">
+
+
+    <style>
+            body {
+                background: linear-gradient(to right, #aa076b, #61045f);
+            }
+
+            .container-fluid {
+                margin-top: 24px;
+            }
+
+
+    </style>
+
+    <title>{{title}}</title>
+</head>
+<body>
+<div class="float-right" style="margin-top: -24px; margin-right: 8px;">
+    <button aria-label="Close"
+            class="close text-light" onclick="pywebview.api.close()" type="button">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+<div class="d-flex flex-column container-fluid mb-0">
+    <h1 class="text-light display-1">{{title}}</h1>
+    <p class="text-light text-justify">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
+        magna aliqua. Feugiat nibh sed pulvinar proin gravida hendrerit. Et egestas quis ipsum suspendisse ultrices
+        gravida. Dignissim enim sit amet venenatis urna cursus eget nunc. Vel eros donec ac odio tempor orci dapibus.
+    </p>
+
+
+    <form>
+        <div class="bmd-form-group">
+            <label class="bmd-label-floating text-light" for="_email">Email address</label>
+            <input aria-describedby="_emailHelp" class="form-control text-white" id="_email" type="email">
+            <small class="bmd-help" id="_emailHelp">We'll never share your email with anyone
+                else.</small>
+        </div>
+        <div class="bmd-form-group">
+            <label class="bmd-label-floating text-light" for="_password">Password</label>
+            <input class="form-control text-white" id="_password" type="password">
+        </div>
+        <div class="bmd-form-group">
+            <div class="checkbox" style="color: red;">
+                <label class="text-white">
+                    <input type="checkbox" id="_check"> Check me out
+                </label>
+            </div>
+            <div class="bmd-form-group form-check checkbox">
+                <input class="form-check-input checkbox" id="_check2" type="checkbox">
+                <label class="form-check-label text-light" for="_check2">Check me out</label>
+            </div>
+        </div>
+        <div class="bmd-form-group">
+            <button class="btn btn-info" onclick="doSomething()" type="button">Submit</button>
+        </div>
+    </form>
+
+
+</div>
+
+<!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
+<script crossorigin="anonymous"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script crossorigin="anonymous"
+        integrity="sha384-fA23ZRQ3G/J53mElWqVJEGJzU0sTs+SvzG8fXVWP+kJQ1lwFAOkcUOysnlKJC33U"
+        src="https://unpkg.com/popper.js@1.12.6/dist/umd/popper.js"></script>
+<script crossorigin="anonymous"
+        integrity="sha384-CauSuKpEqAFajSpkdjv3z9t8E7RlpJ1UP0lKM/+NdtSarroVKu069AlsRPKkFBz9"
+        src="https://unpkg.com/bootstrap-material-design@4.1.1/dist/js/bootstrap-material-design.js"></script>
+<script>$(document).ready(function() { $('body').bootstrapMaterialDesign(); });</script>
+<script>
+        function doSomething() {
+            processResponse(pywebview.api.do_something(getVals()));
+        }
+
+
+</script>
+</body>
+</html>
