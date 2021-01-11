@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {{bootstrap_meta}}
+
+    {{bootstrap_mui_css}}
+
+    <title>{{title}}</title>
+</head>
+<body>
+
+<div class="container-fluid">
+    <div class="row align-items-center justify-content-center m-auto p-3">
+        <form onsubmit="return false;">
+            <div class="form-row">
+                <div class="bmd-form-group col-md-6">
+                    <label class="bmd-label-floating" for="inputEmail4">Email</label>
+                    <input class="form-control" id="inputEmail4" type="email">
+                </div>
+                <div class="bmd-form-group col-md-6">
+                    <label class="bmd-label-floating" for="inputPassword4">Password</label>
+                    <input class="form-control" id="inputPassword4" type="password">
+                </div>
+            </div>
+            <div class="bmd-form-group">
+                <label class="bmd-label-floating" for="inputAddress">Address</label>
+                <input class="form-control" id="inputAddress" type="text">
+            </div>
+            <div class="bmd-form-group">
+                <label class="bmd-label-floating" for="inputAddress2">Address 2</label>
+                <input class="form-control" id="inputAddress2" type="text">
+                <span class="bmd-help">Apartment, studio, or floor</span>
+            </div>
+            <div class="form-row">
+                <div class="bmd-form-group col-md-6">
+                    <label class="bmd-label-floating" for="inputCity">City</label>
+                    <input class="form-control" id="inputCity" type="text">
+                </div>
+                <div class="bmd-form-group col-md-4">
+                    <label class="bmd-label-floating" for="inputState">State</label>
+                    <select class="form-control" id="inputState">
+                        <option>Choose...</option>
+                        <option>CA</option>
+                        <option>OR</option>
+                        <option>WA</option>
+                    </select>
+                </div>
+                <div class="bmd-form-group col-md-2">
+                    <label class="bmd-label-floating" for="inputZip">Zip</label>
+                    <input class="form-control" id="inputZip" type="text">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="bmd-form-group col-md-4">
+                    <div class="checkbox">
+                        <label class="checkbox">
+                            <input id="inputCheck" type="checkbox" value="check"> Check me out
+                        </label>
+                    </div>
+                </div>
+                <div class="bmd-form-group col-md-8">
+                    <fieldset>
+                        <div class="radio">
+                            <label>
+                                <input checked id="inputOptionsRadios1" name="optionsRadios" type="radio" value="option1">
+                                Option one is this and that&mdash;be sure to include why it's great
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input id="inputOptionsRadios2" name="optionsRadios" type="radio" value="option2">
+                                Option two can be something else and selecting it will deselect option one
+                            </label>
+                        </div>
+                        <div class="radio disabled">
+                            <label>
+                                <input disabled id="inputOptionsRadios3" name="optionsRadios" type="radio" value="option3">
+                                Option three is disabled
+                            </label>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+            <button class="btn btn-raised btn-primary" onclick="doSomething()" type="submit">Sign in</button>
+        </form>
+    </div>
+</div>
+
+{{bootstrap_mui_js}}
+
+<script>
+        function doSomething() {
+            processResponse(pywebview.api.do_something(getVals('input')));
+        }
+
+        function callback(message) {
+            console.log(`invoked: callback: ${message}`);
+            return true;
+        }
+
+</script>
+
+</body>
+</html>
