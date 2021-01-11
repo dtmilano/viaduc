@@ -1,0 +1,17 @@
+#! /bin/bash
+
+set -e
+version=$(grep version setup.cfg | awk '{print $3}')
+tag="v$version"
+git tag "$tag" || printf 'WARNING: tag "%s" already exists\n' "$tag"
+git push --tags
+printf 'Next steps:\n'
+printf '1. Create new release on Github using tag=%s title=%s\n' "v$version" "v$version"
+OLDIFS="$IFS"
+IFS=$'\n' changelog=( $(git-log-from-last-tag) )
+IFS="$OLDIFS"
+for l in "${changelog[@]}"
+do
+    printf '\t%s\n' "$l"
+done
+printf '2. Github Actions kicks off automatically to release new version\n'
