@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
 # -*- coding: utf-8 -*-
-'''
+"""
 Copyright (C) 2021  Diego Torres Milano
 Created on Jan 2, 2021
 
@@ -17,7 +17,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 @author: Diego Torres Milano
-'''
+"""
 
 __version__ = '1.0.0'
 
