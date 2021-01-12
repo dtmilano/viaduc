@@ -47,13 +47,6 @@ class Presentation(Viaduc.Presentation):
 
 {{frameless_close_button_light}}
 
-<!--<div class="float-right" style="margin-top: -24px; margin-right: 8px;">-->
-<!--    <button aria-label="Close"-->
-<!--            class="close text-light" onclick="pywebview.api.close()" type="button">-->
-<!--        <span aria-hidden="true">&times;</span>-->
-<!--    </button>-->
-<!--</div>-->
-
 <div class="d-flex flex-column container-fluid mb-0">
     <h1 class="text-light display-1">{{title}}</h1>
     <p class="text-light text-justify">
@@ -61,7 +54,6 @@ class Presentation(Viaduc.Presentation):
         magna aliqua. Feugiat nibh sed pulvinar proin gravida hendrerit. Et egestas quis ipsum suspendisse ultrices
         gravida. Dignissim enim sit amet venenatis urna cursus eget nunc. Vel eros donec ac odio tempor orci dapibus.
     </p>
-
 
     <form>
         <div class="form-group">
@@ -79,8 +71,6 @@ class Presentation(Viaduc.Presentation):
         </div>
         <button class="btn btn-primary" onclick="doSomething()" type="button">Submit</button>
     </form>
-
-
 </div>
 
 {{bootstrap_js}}
