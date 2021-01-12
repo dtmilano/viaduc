@@ -9,7 +9,7 @@ from viaduc import Viaduc
 
 class Api(Viaduc.Api):
     def open_file_dialog(self):
-        file_types = ('Text Files (*.txt;*.sh;*.c)', 'All files (*.*)')
+        file_types = ('Text Files (*.txt;*.sh;*.md;*.py;*.c)', 'All files (*.*)')
 
         file_name = self.window.create_file_dialog(webview.OPEN_DIALOG, allow_multiple=False, file_types=file_types)
         if file_name and file_name[0]:
