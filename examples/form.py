@@ -5,7 +5,7 @@ from viaduc import Viaduc
 
 
 class Api(Viaduc.Api):
-    def do_something(self, vals) -> dict[str, str]:
+    def do_something(self, vals):
         v = self.map_vals(vals)
         if not v['_email']:
             raise ValueError('Empty email')

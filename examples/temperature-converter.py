@@ -9,7 +9,7 @@ def fahrenheit_to_celsius(fahrenheit):
 
 
 class Api(Viaduc.Api):
-    def convert(self, vals) -> dict[str, str]:
+    def convert(self, vals):
         v = self.map_vals(vals)
         if not v['_fahrenheit']:
             raise ValueError('Enter a temperature')
