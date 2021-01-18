@@ -9,11 +9,8 @@ class Presentation(Viaduc.Presentation):
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    {{bootstrap_meta}}
 
-    <!-- Bootstrap CSS -->
     {{bootstrap_css}}
 
     <title>{{title}}</title>
@@ -24,7 +21,6 @@ class Presentation(Viaduc.Presentation):
         <p class="lead">Welcome to <em>Viaduc</em>, the simplest way of creating a GUI in python.</p>
     </div>
     
-    <!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
     {{bootstrap_js}}
 
   </body>  
