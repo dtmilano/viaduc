@@ -6,3 +6,5 @@ Viaduc is probably the simplest way to create a nice-looking gui using python an
 ![form](./screenshots/form.png)
 
 See the code [here](./examples/form.py).
+
+**viaduc** uses pywebview and Bootstrap to provide a gui for other tools and scripts.
