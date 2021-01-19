@@ -14,3 +14,19 @@ See the code for this example [here](./examples/form.py).
 ```
 $ pip install viaduc
 ```
+
+# simplest
+The simplest Viaduc usage program instantiates a `Viaduc` object, like this 
+
+```
+#! /usr/bin/env python3
+
+from viaduc import Viaduc
+
+if __name__ == '__main__':
+    Viaduc()
+```
+
+and you will see this window
+
+![simplest](./screenshots/simplest.png)
