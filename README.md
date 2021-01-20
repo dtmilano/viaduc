@@ -16,7 +16,7 @@ $ pip install viaduc
 ```
 
 # simplest
-The simplest Viaduc usage program instantiates a `Viaduc` object, like this 
+The simplest Viaduc program instantiates a `Viaduc` object, like this 
 
 ```
 #! /usr/bin/env python3
