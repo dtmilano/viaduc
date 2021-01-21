@@ -33,7 +33,7 @@ and you will see this window
 
 # helloworld
 Then, let's do something more interesting implementing the `Presentation` class.
-Let's add a `title` and some `html` which includes some metatags (`{{name}}`)) that are replaced by viaduc.
+Let's add a `title` and some `html` which includes some metatags (`{{name}}`) that are replaced by viaduc.
 
 ```
 #! /usr/bin/env python3
