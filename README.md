@@ -74,3 +74,56 @@ and we will obtain this
 
 
 ![simplest](./screenshots/helloworld.png)
+
+# temperature converter
+We have seen how `Presentation` can implement the GUI, but what about the interaction?
+
+```
+#! /usr/bin/env python3
+import sys
+
+from viaduc import Viaduc
+
+
+def fahrenheit_to_celsius(fahrenheit):
+    return round((5 / 9) * (float(fahrenheit) - 32), 2)
+
+
+class Api(Viaduc.Api):
+    def convert(self, vals):
+        v = self.map_vals(vals)
+        if not v['_fahrenheit']:
+            raise ValueError('Enter a temperature')
+        response = {
+            'action': 'CALLBACK',
+            'function': 'showCelsius',
+            'params': {
+                'celsius': fahrenheit_to_celsius(v['_fahrenheit'])
+            }
+        }
+        return response
+
+
+class Presentation(Viaduc.Presentation):
+    width = 320
+    height = 468
+    title = 'temperature converter'
+    html = '''
+    <!-- copy file here -->
+    '''
+    file = "temperature-converter.html"
+
+
+if __name__ == '__main__':
+    Viaduc(api=Api(), presentation=Presentation(), args=sys.argv + ['--frameless'])
+```
+
+Here we are also implementing `Api` which provides the means of interoperation between domains.
+
+Another thing to note here is that instead of having the HTML as a string we are reading it from a file, just to keep this example file smaller and being able to focus on the important parts.
+
+When we execute it we obtain this window. It's frameless as we are passing this extra argument to `Viaduc`.
+
+
+![temperature-converter](./screenshots/temperature-converter.png)
+
