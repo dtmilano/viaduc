@@ -131,3 +131,10 @@ When we execute it we obtain this window. It's `frameless` as we are passing thi
 Clicking the **Convert** button or pressing **RETURN** converts the temperature from Fahrenheit to Celsius, invoking the `convert()` method. All the form values are automatically added by `Viaduc` as `vals` which contains `id`s and `values`.
 
 Once we convert the temperature using `fahrenheit_to_celsius()` we use the `CALLBACK` action to invoke a javascript method defined in [temperature-converter.html](./examples/temperature-converter.html#L65) to show the result.
+
+# editor
+We can also interact with the local filesystem reading and writing files. This [editor](./examples/editor.py) shows these interactions.
+
+Also shows how to use [Bootstrap Material Design](https://mdbootstrap.github.io/bootstrap-material-design/).
+
+![editor](./screenshots/editor-example.gif)
