@@ -16,7 +16,7 @@ $ pip install viaduc
 ```
 
 # simplest
-The simplest Viaduc program instantiates a `Viaduc` object, like this 
+The simplest Viaduc program instantiates a `Viaduc` object, like this ([simplest.py](./examples/simplest.py))
 
 ```
 #! /usr/bin/env python3
@@ -33,7 +33,7 @@ and you will see this window
 
 # helloworld
 Then, let's do something more interesting implementing the `Presentation` class.
-Let's add a `title` and some `html` which includes some metatags (`{{name}}`) that are replaced by viaduc.
+Let's add a `title` and some `html` which includes some metatags (`{{name}}`) that are replaced by viaduc (([simplest.py](./examples/helloworld.py)).
 
 ```
 #! /usr/bin/env python3
@@ -77,6 +77,7 @@ and we will obtain this
 
 # temperature converter
 We have seen how `Presentation` can implement the GUI, but what about the interaction?
+([temperature-converter.py](./examples/temperature-converter.py))
 
 ```
 #! /usr/bin/env python3
