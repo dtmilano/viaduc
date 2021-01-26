@@ -196,8 +196,8 @@ VIADUC_SCRIPT = """
         return a;
     }
     
-    function print(str) {
-        pywebview.api.print(str);
+    function _print(...args) {
+        pywebview.api.print(args);
     }
 </script>
 """
@@ -350,8 +350,8 @@ class Viaduc:
                 m[v['id']] = v['val']
             return m
 
-        def print(self, _str):
-            print(_str)
+        def print(self, *args):
+            print(args)
 
     class Presentation:
         width = 800
