@@ -388,8 +388,8 @@ class Viaduc:
 
         # parse args
         arg_parser = argparse.ArgumentParser(description='Viaduc: simplest python GUI.')
-        arg_parser.add_argument('-x', '--debug', action='store_true', default=False)
-        arg_parser.add_argument('--frameless', action='store_true', default=False)
+        arg_parser.add_argument('-x', '--debug', action='store_true', default=False, help='enable debug tools')
+        arg_parser.add_argument('--frameless', action='store_true', default=False, help='create a frameless window')
         parsed_args = arg_parser.parse_args(args[1:])
         self.debug = parsed_args.debug
         self.frameless = parsed_args.frameless
