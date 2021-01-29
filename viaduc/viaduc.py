@@ -19,7 +19,7 @@ limitations under the License.
 @author: Diego Torres Milano
 """
 
-__version__ = '1.0.3'
+__version__ = '1.0.4'
 
 import argparse as argparse
 import re
@@ -433,6 +433,20 @@ class Viaduc:
 
     def on_top(self, value):
         self.window.on_top = value
+
+    @staticmethod
+    def done():
+        return {
+            'action': 'DONE'
+        }
+
+    @staticmethod
+    def callback(f: str, params: dict):
+        return {
+            'action': 'CALLBACK',
+            'function': f,
+            'params': params
+        }
 
 
 if __name__ == '__main__':

@@ -15,43 +15,27 @@ class Api(Viaduc.Api):
             return file_name[0]
 
     def open_dir_dialog(self, dir_name):
-        print('dir_name', dir_name)
         if not dir_name:
             dir_name = self.get_dir_name()
             if not dir_name:
                 # cancel was pressed
-                return {
-                    'action': 'DONE'
-                }
+                return Viaduc.done()
+
         image_files = []
         for f in os.listdir(dir_name):
             if f.endswith('.png') or f.endswith('.jpg') or f.endswith('.gif'):
                 image_files.append(f)
         if not image_files:
-            raise ValueError('No image files in dir')
+            raise ValueError(f'No image files in {dir_name}')
 
-        return {
-            'action': 'CALLBACK',
-            'function': 'loadDir',
-            'params': {
-                'dir': dir_name,
-                'imageFiles': image_files
-            }
-        }
+        return Viaduc.callback('loadDir', {'dir': dir_name, 'imageFiles': image_files})
 
     def load_image(self, image):
         mime, encoding = mimetypes.guess_type(image)
         with open(image, 'rb') as i:
             data = base64.b64encode(i.read()).decode("ascii")
             src = f'data:{mime};base64,{data}'
-            return {
-                'action': 'CALLBACK',
-                'function': 'showImage',
-                'params': {
-                    'image': image,
-                    'src': src
-                }
-            }
+            return Viaduc.callback('showImage', {'image': image, 'src': src})
 
 
 class Presentation(Viaduc.Presentation):
