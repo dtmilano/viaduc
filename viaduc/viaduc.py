@@ -19,7 +19,7 @@ limitations under the License.
 @author: Diego Torres Milano
 """
 
-__version__ = '1.0.4'
+__version__ = '1.0.5'
 
 import argparse as argparse
 import re
@@ -319,6 +319,7 @@ class Viaduc:
     """
     Viaduc: simplest python gui.
     """
+
     class Api:
         window: webview.window = None
 
@@ -435,9 +436,10 @@ class Viaduc:
         self.window.on_top = value
 
     @staticmethod
-    def done():
+    def done(msg=None):
         return {
-            'action': 'DONE'
+            'action': 'DONE',
+            'message': msg
         }
 
     @staticmethod
