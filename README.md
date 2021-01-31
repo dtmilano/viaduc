@@ -95,14 +95,7 @@ class Api(Viaduc.Api):
         v = self.map_vals(vals)
         if not v['_fahrenheit']:
             raise ValueError('Enter a temperature')
-        response = {
-            'action': 'CALLBACK',
-            'function': 'showCelsius',
-            'params': {
-                'celsius': fahrenheit_to_celsius(v['_fahrenheit'])
-            }
-        }
-        return response
+        return Viaduc.callback('showCelsius', {'celsius': fahrenheit_to_celsius(v['_fahrenheit'])})
 
 
 class Presentation(Viaduc.Presentation):
