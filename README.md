@@ -122,7 +122,7 @@ When we execute it, we obtain this window. It's `frameless` as we are passing th
 
 ![temperature-converter](./screenshots/temperature-converter.png)
 
-Clicking the **Convert** button or pressing **RETURN** converts the temperature from Fahrenheit to Celsius, invoking the `convert()` method. All the form values are automatically added by `Viaduc` as `vals` which contains `id`s and `values`.
+Clicking the **Convert** button or pressing **RETURN** converts Fahrenheit's temperature to Celsius, invoking the `convert()` method. Viaduc automatically adds all the form values as `vals` that contain `id`s and `values`.
 
 Once we convert the temperature using `fahrenheit_to_celsius()` we use the `CALLBACK` action to invoke a javascript method defined in [temperature-converter.html](./examples/temperature-converter.html#L65) to show the result.
 
