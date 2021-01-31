@@ -112,11 +112,12 @@ if __name__ == '__main__':
     Viaduc(api=Api(), presentation=Presentation(), args=sys.argv + ['--frameless'])
 ```
 
-Here we are also implementing `Api` which provides the means of interoperation between domains.
 
-Another thing to note here is that instead of having the HTML as a string we are reading it from a file, just to keep this example file smaller and being able to focus on the important parts.
+Here we are also implementing API, which provides the means of interoperation between domains.
 
-When we execute it we obtain this window. It's `frameless` as we are passing this extra argument to `Viaduc`.
+Another thing to note here is that instead of having the HTML as a string, we read it from a file to keep this example file smaller and focus on the essential parts.
+
+When we execute it, we obtain this window. It's `frameless` as we are passing this extra argument to `Viaduc`.
 
 
 ![temperature-converter](./screenshots/temperature-converter.png)
