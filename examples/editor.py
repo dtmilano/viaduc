@@ -3,7 +3,6 @@ import os
 import sys
 
 import webview
-
 from viaduc import Viaduc
 
 
@@ -14,18 +13,9 @@ class Api(Viaduc.Api):
         file_name = self.window.create_file_dialog(webview.OPEN_DIALOG, allow_multiple=False, file_types=file_types)
         if file_name and file_name[0]:
             with open(file_name[0]) as f:
-                return {
-                    'action': 'CALLBACK',
-                    'function': 'loadFile',
-                    'params': {
-                        'fileName': file_name,
-                        'content': f.read()
-                    }
-                }
+                return Viaduc.callback('loadFile', {'fileName': file_name, 'content': f.read()})
         else:
-            return {
-                'action': 'DONE'
-            }
+            return Viaduc.done()
 
     def save_file_dialog(self, vals):
         v = self.map_vals(vals)
@@ -36,9 +26,7 @@ class Api(Viaduc.Api):
             with open(file_name, "w+") as f:
                 f.write(v['_editor'])
 
-        return {
-            'action': 'DONE'
-        }
+        return Viaduc.done()
 
 
 class Presentation(Viaduc.Presentation):

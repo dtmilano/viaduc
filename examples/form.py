@@ -11,11 +11,8 @@ class Api(Viaduc.Api):
             raise ValueError('Empty email')
         if not v['_password']:
             raise ValueError('Empty password')
-        response = {
-            'action': 'DONE',
-            'message': 'Operation completed'
-        }
-        return response
+        print(v)
+        return Viaduc.done('Operation completed')
 
 
 class Presentation(Viaduc.Presentation):

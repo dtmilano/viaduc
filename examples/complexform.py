@@ -13,19 +13,9 @@ class Api(Viaduc.Api):
         if not v['inputPassword4']:
             raise ValueError('Empty password')
         if v['inputCheck']:
-            response = {
-                'action': 'CALLBACK',
-                'function': 'callback',
-                'params': {
-                    'message': 'This is a sample callback'
-                }
-            }
+            return Viaduc.callback('callback', {'message': 'This is a sample callback'})
         else:
-            response = {
-                'action': 'DONE',
-                'message': 'Operation completed'
-            }
-        return response
+            return Viaduc.done('Operation completed')
 
 
 class Presentation(Viaduc.Presentation):
