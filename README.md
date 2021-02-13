@@ -138,6 +138,6 @@ A more involved and practical example. [android-device-viewer](./examples/androi
 
 ![android-device-viewer](./screenshots/android-device-viewer.png)
 
-Using [Culebratester2-public](https://github.com/dtmilano/CulebraTester2-public) and the python client library [Culebratester2-client](https://github.com/dtmilano/CulebraTester2-client) communicates with an Android device to get the screenshot and send events (i.e. clicks).
+Using [Culebratester2-public](https://github.com/dtmilano/CulebraTester2-public) and the python client library [Culebratester2-client](https://github.com/dtmilano/CulebraTester2-client) communicates with an Android device to get the screenshot and send events (i.e. clicks). Therefore, you can interact with the physical device through its representation.
 
 Also provides a context menu to be able to send BACK or quit the app.
