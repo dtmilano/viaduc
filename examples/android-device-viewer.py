@@ -151,7 +151,7 @@ HTML = '''
                 s.attr('src', response.screenshot);
             })
             .catch(e => {
-                doAlert('alert-error', 'error', e);
+                doAlert('alert-danger', 'error', e);
             });
             }, 500);
     }
@@ -160,7 +160,7 @@ HTML = '''
         pywebview.api.press_back()
             .then(obtainScreenshot)
             .catch(e => {
-                doAlert('alert-error', 'error', e);
+                doAlert('alert-danger', 'error', e);
             });
     }
 
@@ -168,7 +168,7 @@ HTML = '''
         pywebview.api.click(e.pageX * 4, e.pageY * 4)
             .then(obtainScreenshot)
             .catch(e => {
-                doAlert('alert-error', 'error', e);
+                doAlert('alert-danger', 'error', e);
             });
     }
 </script>
