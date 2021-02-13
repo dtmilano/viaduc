@@ -187,4 +187,4 @@ class Presentation(Viaduc.Presentation):
 
 
 if __name__ == '__main__':
-    Viaduc(api=Api(), presentation=Presentation(), args=sys.argv + ['--frameless'])
+    Viaduc(api=Api(), presentation=Presentation(), args=sys.argv + ['--debug', '--frameless'])
