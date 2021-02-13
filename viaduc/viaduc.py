@@ -376,7 +376,10 @@ class Viaduc:
                 with open(self.file) as f:
                     self.html = f.read()
 
-            self.html = self.html.re_escape().format(title=self.title, **toolkit.map)
+            self.toolkit = toolkit
+
+        def get_html(self):
+            return self.html.re_escape().format(title=self.title, **self.toolkit.map)
 
     def __init__(self, api: Api = Api(), presentation: Presentation = Presentation(), args=None):
         if args is None:
@@ -396,7 +399,7 @@ class Viaduc:
         self.frameless = parsed_args.frameless
 
         # parse html
-        self.parser.feed(presentation.html)
+        self.parser.feed(presentation.get_html())
         if not self.parser.bootstrap_css:
             raise RuntimeError(f'No bootstrap css found in html. See {BOOTSTRAP_TEMPLATE_URL}')
         if not self.parser.bootstrap_js:
