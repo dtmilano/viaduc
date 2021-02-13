@@ -132,3 +132,12 @@ We can also interact with the local filesystem reading and writing files. This [
 Also shows how to use [Bootstrap Material Design](https://mdbootstrap.github.io/bootstrap-material-design/).
 
 ![editor](./screenshots/editor-example.gif)
+
+# android-device-viewer
+A more involved and practical example. [android-device-viewer](./examples/android-device-viewer.py) shows how easy is to provide a GUI and some interaction to other apps.
+
+![android-device-viewer](./screenshots/android-device-viewer.png)
+
+Using [Culebratester2-client](https://github.com/dtmilano/CulebraTester2-public) and the python client library [Culebratester2-client](https://github.com/dtmilano/CulebraTester2-client) communicates with an Android device to get the screenshot and send events (i.e. clicks).
+
+Also provides a context menu to be able to send BACK or quit the app.
