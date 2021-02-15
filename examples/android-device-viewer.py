@@ -34,7 +34,7 @@ class Culebratester:
         except Exception as e:
             raise RuntimeError("Exception when calling DefaultApi->device_display_real_size_get: %s\n" % e)
 
-    def screenshot(self, scale=1.0, quality=100):
+    def screenshot(self, scale, quality):
         try:
             api_response = self.api_instance.ui_device_screenshot_get(scale=scale, quality=quality)
             stream = io.BytesIO(api_response.data)
@@ -62,10 +62,6 @@ culebratester = Culebratester()
 
 
 class Api(Viaduc.Api):
-    def __init__(self):
-        super(Viaduc.Api, self).__init__()
-        self.obtain_screenshot()
-
     def obtain_screenshot(self):
         display_real_size = culebratester.get_display_real_size()
         return {'screenshot': culebratester.encode_screenshot(), 'w': display_real_size.x / 4,
@@ -181,10 +177,12 @@ HTML = '''
 class Presentation(Viaduc.Presentation):
     html = HTML
     title = 'android device viewer'
+    frameless = True
+    window_background_color = '#000'
     display_real_size = culebratester.get_display_real_size()
     width = display_real_size.x / 4
     height = display_real_size.y / 4
 
 
 if __name__ == '__main__':
-    Viaduc(api=Api(), presentation=Presentation(), args=sys.argv + ['--debug', '--frameless'])
+    Viaduc(api=Api(), presentation=Presentation(), args=sys.argv + ['--debug'])

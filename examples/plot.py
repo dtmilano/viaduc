@@ -69,7 +69,7 @@ class Presentation(Viaduc.Presentation):
                 $('#plot').append(plot);
             })
             .catch(function(e) {
-                doAlert('alert-error', 'error', e);
+                doAlert('alert-danger', 'error', e);
             });
     }
 
