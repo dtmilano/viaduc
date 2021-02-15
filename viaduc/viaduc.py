@@ -19,7 +19,7 @@ limitations under the License.
 @author: Diego Torres Milano
 """
 
-__version__ = '1.0.6'
+__version__ = '1.0.7'
 
 import argparse as argparse
 import re
