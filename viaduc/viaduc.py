@@ -199,6 +199,10 @@ VIADUC_SCRIPT = """
     function _print(...args) {
         pywebview.api.print(args);
     }
+    
+    function pyprint(...args) {
+        pywebview.api.print(args);
+    }
 </script>
 """
 
@@ -357,6 +361,9 @@ class Viaduc:
     class Presentation:
         width = 800
         height = 600
+        frameless = False
+        window_transparent = False
+        window_background_color = '#fff'
         title: str = ""
         # The idea is that html is a single string (that can be copied from the content of a single html file that can
         # be open with the browser, debugged, tested, etc.)
@@ -393,7 +400,8 @@ class Viaduc:
         # parse args
         arg_parser = argparse.ArgumentParser(description='Viaduc: simplest python GUI.')
         arg_parser.add_argument('-x', '--debug', action='store_true', default=False, help='enable debug tools')
-        arg_parser.add_argument('--frameless', action='store_true', default=False, help='create a frameless window')
+        arg_parser.add_argument('--frameless', action='store_true', default=presentation.frameless,
+                                help='create a frameless window')
         parsed_args = arg_parser.parse_args(args[1:])
         self.debug = parsed_args.debug
         self.frameless = parsed_args.frameless
@@ -415,7 +423,8 @@ class Viaduc:
                                             js_api=api,
                                             frameless=self.frameless,
                                             on_top=True,
-                                            transparent=False
+                                            transparent=presentation.window_transparent,
+                                            background_color=presentation.window_background_color
                                             )
 
         if api:
