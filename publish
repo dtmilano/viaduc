@@ -7,6 +7,7 @@ git tag "$tag" || printf 'WARNING: tag "%s" already exists\n' "$tag"
 git push --tags
 printf 'Next steps:\n'
 printf '1. Create new release on Github using tag=%s title=%s\n' "v$version" "v$version"
+printf '1.1 Use url %s\n' "https://github.com/dtmilano/viaduc/releases/new"
 OLDIFS="$IFS"
 IFS=$'\n' changelog=( $(git-log-from-last-tag) )
 IFS="$OLDIFS"
