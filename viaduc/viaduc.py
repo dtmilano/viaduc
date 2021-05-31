@@ -72,23 +72,18 @@ BOOTSTRAP_MUI_JS = '''
 <script>$(document).ready(function() { $('body').bootstrapMaterialDesign(); });</script>
 '''
 
-FRAMELESS_CLOSE_BUTTON = '''
+FRAMELESS_CLOSE_BUTTON_FMT = '''
 <div class="float-right" style="margin-top: 0px; margin-right: 8px;">
     <button aria-label="Close"
-            class="close" onclick="pywebview.api.close()" type="button">
+            class="close {}" onclick="pywebview.api.close()" type="button">
         <span aria-hidden="true">&times;</span>
     </button>
 </div>
 '''
 
-FRAMELESS_CLOSE_BUTTON_LIGHT = '''
-<div class="float-right" style="margin-top: 0px; margin-right: 8px;">
-    <button aria-label="Close"
-            class="close text-light" onclick="pywebview.api.close()" type="button">
-        <span aria-hidden="true">&times;</span>
-    </button>
-</div>
-'''
+FRAMELESS_CLOSE_BUTTON = FRAMELESS_CLOSE_BUTTON_FMT.format('')
+
+FRAMELESS_CLOSE_BUTTON_LIGHT = FRAMELESS_CLOSE_BUTTON_FMT.format('text-light')
 
 # template from https://getbootstrap.com/docs/4.0/getting-started/introduction/
 HTML = """
@@ -120,6 +115,9 @@ VIADUC_SCRIPT = """
         promise
             .then(function(response) {
                 console.log('processResponse:', response);
+                if (!response.status) {
+                    response.status = '';
+                }
                 switch (response.action) {
                     case 'SUCCESS':
                     case 'DONE':
@@ -145,6 +143,10 @@ VIADUC_SCRIPT = """
                         }
                         break;
                         
+                    case 'ERROR':
+                        doAlert('alert-danger', 'Error', `${response.status} ${response.message}`);
+                        break;
+                            
                     default:
                         doAlert('alert-danger', 'Error', `Invalid response status: ${response.status}`);
                 }
@@ -154,8 +156,8 @@ VIADUC_SCRIPT = """
              });
     }
     
-    function doAlert(alertClass, name, text) {
-        if (alertClass == 'alert-danger') {
+    function doAlert(alertClass = 'alert-danger', name = 'Error', text = '') {
+        if (alertClass === 'alert-danger') {
             console.error(name, text);
         }
         if (name.toLowerCase() === 'error') {
