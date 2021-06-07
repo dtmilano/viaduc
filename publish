@@ -13,6 +13,6 @@ IFS=$'\n' changelog=( $(git-log-from-last-tag) )
 IFS="$OLDIFS"
 for l in "${changelog[@]}"
 do
-    printf '\t%s\n' "$l"
+    printf '%s\n' "$l"
 done
 printf '2. Github Actions kicks off automatically to release new version\n'
