@@ -187,6 +187,9 @@ VIADUC_SCRIPT = """
         if (t == 'radio') {
             return {id: n, val: $(`input[name="${n}"]:checked`).val() || null};
         }
+        if (t == 'select-one' || t == 'select-multiple') {
+            return {id: n, val: e.val()};
+        }
         return {id: e.id, val: e.val()};
     }
     
