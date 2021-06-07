@@ -177,27 +177,38 @@ VIADUC_SCRIPT = """
         }
         var e = $(id);
         var t = e.prop('type');
+        var n = e.attr('name');
+        if (t == 'text') {
+            return {id: n, val: e.val()};
+        }
         if (t == 'checkbox') {
-            return e.is(':checked');
+            return {id: n, val: e.is(':checked')};
         }
         if (t == 'radio') {
-            var n = e.attr('name');
-            return $(`input[name="${n}"]:checked`).val();
+            return {id: n, val: $(`input[name="${n}"]:checked`).val() || null};
         }
-        return e.val();
+        return {id: e.id, val: e.val()};
     }
     
-    function getVals(idSelector = '_') {
+    function getVals(selector = '_') {
         var a = [];
-        document.querySelectorAll(`[id^=${idSelector}]`)
-            .forEach(
-                function(e) {
-                    a.push({id:e.id, val:getVal(e.id)});
+
+        // elements with id's starting with selector
+        document.querySelectorAll(`[id^=${selector}]`)
+            .forEach(e => { a.push(getVal(e.id)) });
+
+        // elements with classes starting with selector
+        document.querySelectorAll('*')
+            .forEach(e => {
+                    e.className.split(' ')
+                        .filter(v => { v.startsWith(selector)})
+                        .forEach(c => { a.push(getVal(e.id)) });
                 }
-            ); 
+            );
+
         return a;
     }
-    
+
     function _print(...args) {
         pywebview.api.print(args);
     }
@@ -354,7 +365,11 @@ class Viaduc:
             """
             m = {}
             for v in vals:
-                m[v['id']] = v['val']
+                try:
+                    m[v['id']] = v['val']
+                except KeyError as e:
+                    print('KeyError:', e, file=sys.stderr)
+                    print('KeyError:', v, file=sys.stderr)
             return m
 
         def print(self, *args):
