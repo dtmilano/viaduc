@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Copyright (C) 2021  Diego Torres Milano
+Copyright (C) 2021-2022  Diego Torres Milano
 Created on Jan 2, 2021
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,7 +19,7 @@ limitations under the License.
 @author: Diego Torres Milano
 """
 
-__version__ = '1.0.9'
+__version__ = '1.1.0'
 
 import argparse as argparse
 import re
@@ -422,18 +422,20 @@ class Viaduc:
         arg_parser.add_argument('-x', '--debug', action='store_true', default=False, help='enable debug tools')
         arg_parser.add_argument('--frameless', action='store_true', default=presentation.frameless,
                                 help='create a frameless window')
+        arg_parser.add_argument('--no-bootstrap', action='store_true', default=False, help='do no use bootstrap')
         parsed_args = arg_parser.parse_args(args[1:])
         self.debug = parsed_args.debug
         self.frameless = parsed_args.frameless
 
         # parse html
         self.parser.feed(presentation.get_html())
-        if not self.parser.bootstrap_css:
-            raise RuntimeError(f'No bootstrap css found in html. See {BOOTSTRAP_TEMPLATE_URL}')
-        if not self.parser.bootstrap_js:
-            raise RuntimeError(f'No bootstrap js found in html. See {BOOTSTRAP_TEMPLATE_URL}')
-        if not self.parser.jquery:
-            raise RuntimeError(f'No jquery found in html. See {BOOTSTRAP_TEMPLATE_URL}')
+        if not parsed_args.no_bootstrap:
+            if not self.parser.bootstrap_css:
+                raise RuntimeError(f'No bootstrap css found in html. See {BOOTSTRAP_TEMPLATE_URL}')
+            if not self.parser.bootstrap_js:
+                raise RuntimeError(f'No bootstrap js found in html. See {BOOTSTRAP_TEMPLATE_URL}')
+            if not self.parser.jquery:
+                raise RuntimeError(f'No jquery found in html. See {BOOTSTRAP_TEMPLATE_URL}')
 
         self.window = webview.create_window(presentation.title,
                                             width=presentation.width,
