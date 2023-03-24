@@ -1,6 +1,7 @@
 #! /usr/bin/env python3
 
 import sys
+
 from viaduc import Viaduc
 
 
@@ -20,4 +21,4 @@ class Presentation(Viaduc.Presentation):
 
 
 if __name__ == '__main__':
-    Viaduc(presentation=Presentation(), args=sys.argv + ['--no-bootstrap'])
+    Viaduc(presentation=Presentation(), args=sys.argv + ['--no-bootstrap', '--frameless'])

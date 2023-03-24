@@ -178,19 +178,21 @@ VIADUC_SCRIPT = """
         var e = $(id);
         var t = e.prop('type');
         var n = e.attr('name');
-        if (t == 'text') {
-            return {id: n, val: e.val()};
+        var rid = n ? n : e.attr('id');
+        
+        if (t == 'text' || t == 'email' || t == 'password') {
+            return {id: rid, val: e.val()};
         }
         if (t == 'checkbox') {
-            return {id: n, val: e.is(':checked')};
+            return {id: rid, val: e.is(':checked')};
         }
         if (t == 'radio') {
-            return {id: n, val: $(`input[name="${n}"]:checked`).val() || null};
+            return {id: rid, val: $(`input[name="${n}"]:checked`).val() || null};
         }
         if (t == 'select-one' || t == 'select-multiple') {
-            return {id: n, val: e.val()};
+            return {id: rid, val: e.val()};
         }
-        return {id: e.id, val: e.val()};
+        return {id: rid, val: e.val()};
     }
     
     function getVals(selector = '_') {
