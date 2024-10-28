@@ -19,6 +19,12 @@ jobs:
 
       - name: Build the package
         run: python -m pep517.build .
+
+      - name: Upload the package
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-package-distributions
+          path: dist/
         
   pypi-publish:
     name: upload release to PyPI
