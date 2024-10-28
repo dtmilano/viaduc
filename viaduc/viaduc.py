@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Copyright (C) 2021-2022  Diego Torres Milano
+Copyright (C) 2021-2024  Diego Torres Milano
 Created on Jan 2, 2021
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,47 +19,53 @@ limitations under the License.
 @author: Diego Torres Milano
 """
 
-__version__ = '1.2.1'
+__version__ = "2.0.0"
 
 import argparse as argparse
 import re
 import sys
+import os
 import time
 from abc import ABC
 from html.parser import HTMLParser
 
 import webview
 from forbiddenfruit import curse
+import subprocess
+import atexit
+from typing import Any, List, Optional
 
-BOOTSTRAP_TEMPLATE_URL = 'https://getbootstrap.com/docs/4.0/getting-started/introduction/'
+BOOTSTRAP_TEMPLATE_URL = (
+    "https://getbootstrap.com/docs/4.0/getting-started/introduction/"
+)
 
-BOOTSTRAP_META = '''
+BOOTSTRAP_META = """
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-'''
+"""
 
-BOOTSTRAP_CSS = '''
+BOOTSTRAP_CSS = """
     <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
           integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" rel="stylesheet">
-'''
+"""
 
-BOOTSTRAP_MUI_CSS = '''
+BOOTSTRAP_MUI_CSS = """
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons" rel="stylesheet">
     <link crossorigin="anonymous"
           href="https://unpkg.com/bootstrap-material-design@4.1.1/dist/css/bootstrap-material-design.min.css"
           integrity="sha384-wXznGJNEXNG1NFsbm0ugrLFMQPWswR3lds2VeinahP8N0zJw9VWSopbjv2x7WCvX" rel="stylesheet">
-'''
+"""
 
-BOOTSTRAP_JS = '''
+BOOTSTRAP_JS = """
 <script crossorigin="anonymous"
         integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
         src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script crossorigin="anonymous"
         integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
         src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"></script>
-'''
+"""
 
-BOOTSTRAP_MUI_JS = '''
+BOOTSTRAP_MUI_JS = """
 <script crossorigin="anonymous"
         integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
         src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
@@ -70,20 +76,20 @@ BOOTSTRAP_MUI_JS = '''
         integrity="sha384-CauSuKpEqAFajSpkdjv3z9t8E7RlpJ1UP0lKM/+NdtSarroVKu069AlsRPKkFBz9"
         src="https://unpkg.com/bootstrap-material-design@4.1.1/dist/js/bootstrap-material-design.js"></script>
 <script>$(document).ready(function() { $('body').bootstrapMaterialDesign(); });</script>
-'''
+"""
 
-FRAMELESS_CLOSE_BUTTON_FMT = '''
+FRAMELESS_CLOSE_BUTTON_FMT = """
 <div class="float-right" style="margin-top: 0px; margin-right: 8px;">
     <button aria-label="Close"
             class="close {}" onclick="pywebview.api.close()" type="button">
         <span aria-hidden="true">&times;</span>
     </button>
 </div>
-'''
+"""
 
-FRAMELESS_CLOSE_BUTTON = FRAMELESS_CLOSE_BUTTON_FMT.format('')
+FRAMELESS_CLOSE_BUTTON = FRAMELESS_CLOSE_BUTTON_FMT.format("")
 
-FRAMELESS_CLOSE_BUTTON_LIGHT = FRAMELESS_CLOSE_BUTTON_FMT.format('text-light')
+FRAMELESS_CLOSE_BUTTON_LIGHT = FRAMELESS_CLOSE_BUTTON_FMT.format("text-light")
 
 # template from https://getbootstrap.com/docs/4.0/getting-started/introduction/
 HTML = """
@@ -125,14 +131,14 @@ VIADUC_SCRIPT = """
                             doAlert('alert-success', 'Success', `${response.status} ${response.message}`);
                         }
                         break;
-                        
+
                     case 'WARNING':
                     case 'CANCELED':
                         if (response.message) {
                             doAlert('alert-warning', 'Warning', `${response.status} ${response.message}`);
                         }
                         break;
-                    
+
                     case 'CALLBACK':
                         var f = window[response.function];
                         var p = response.params;
@@ -142,11 +148,11 @@ VIADUC_SCRIPT = """
                             doAlert('alert-danger', 'Error', `Not a function: ${response.function}`);
                         }
                         break;
-                        
+
                     case 'ERROR':
                         doAlert('alert-danger', 'Error', `${response.status} ${response.message}`);
                         break;
-                            
+
                     default:
                         doAlert('alert-danger', 'Error', `Invalid response status: ${response.status}`);
                 }
@@ -155,7 +161,7 @@ VIADUC_SCRIPT = """
                 doAlert('alert-danger', 'Error', e);
              });
     }
-    
+
     function doAlert(alertClass = 'alert-danger', name = 'Error', text = '') {
         if (alertClass === 'alert-danger') {
             console.error(name, text);
@@ -170,7 +176,7 @@ VIADUC_SCRIPT = """
             `<div id="alert" class="alert alert-dismissible fade show ${alertClass}" role="alert" style="display: flex; flex-grow: 1; width: 90vw; position: fixed; bottom: 24px; left: 5%; z-index: 10; margin: auto;"> <strong>${name} </strong> ${text} <button type="button" class="close" data-dismiss="alert" aria-label="Close" onclick=""> <span aria-hidden="true">&times;</span> </button> </div>`
             );
     }
-    
+
     function getVal(id) {
         if (!id.startsWith('#')) {
             id = `#${id}`;
@@ -179,7 +185,7 @@ VIADUC_SCRIPT = """
         var t = e.prop('type');
         var n = e.attr('name');
         var rid = n ? n : e.attr('id');
-        
+
         if (t == 'text' || t == 'email' || t == 'password') {
             return {id: rid, val: e.val()};
         }
@@ -194,7 +200,7 @@ VIADUC_SCRIPT = """
         }
         return {id: rid, val: e.val()};
     }
-    
+
     function getVals(selector = '_') {
         var a = [];
 
@@ -217,7 +223,7 @@ VIADUC_SCRIPT = """
     function _print(...args) {
         pywebview.api.print(args);
     }
-    
+
     function pyprint(...args) {
         pywebview.api.print(args);
     }
@@ -242,23 +248,23 @@ def has_attr(key, attrs):
 class Toolkit:
     def __init__(self):
         self.map = dict()
-        self.map['frameless_close_button'] = FRAMELESS_CLOSE_BUTTON
-        self.map['frameless_close_button_light'] = FRAMELESS_CLOSE_BUTTON_LIGHT
+        self.map["frameless_close_button"] = FRAMELESS_CLOSE_BUTTON
+        self.map["frameless_close_button_light"] = FRAMELESS_CLOSE_BUTTON_LIGHT
 
 
 class Bootstrap(Toolkit):
     def __init__(self):
         super(Bootstrap, self).__init__()
-        self.map['bootstrap_meta'] = BOOTSTRAP_META
-        self.map['bootstrap_css'] = BOOTSTRAP_CSS
-        self.map['bootstrap_js'] = BOOTSTRAP_JS
+        self.map["bootstrap_meta"] = BOOTSTRAP_META
+        self.map["bootstrap_css"] = BOOTSTRAP_CSS
+        self.map["bootstrap_js"] = BOOTSTRAP_JS
 
 
 class BootstrapMui(Bootstrap):
     def __init__(self):
         super(BootstrapMui, self).__init__()
-        self.map['bootstrap_mui_css'] = BOOTSTRAP_MUI_CSS
-        self.map['bootstrap_mui_js'] = BOOTSTRAP_MUI_JS
+        self.map["bootstrap_mui_css"] = BOOTSTRAP_MUI_CSS
+        self.map["bootstrap_mui_js"] = BOOTSTRAP_MUI_JS
 
 
 class ViaducParser(HTMLParser, ABC):
@@ -267,29 +273,35 @@ class ViaducParser(HTMLParser, ABC):
     popper_js = False
     jquery = False
     fonts_css = False
-    parsed = ''
+    parsed = ""
 
     def handle_starttag(self, tag, attrs):
-        if tag == 'script':
-            if has_attr('src', attrs):
-                src = get_attr('src', attrs)
-                if 'bootstrap.bundle.min.js' in src or 'bootstrap-material-design.js' in src:
+        if tag == "script":
+            if has_attr("src", attrs):
+                src = get_attr("src", attrs)
+                if (
+                    "bootstrap.bundle.min.js" in src
+                    or "bootstrap-material-design.js" in src
+                ):
                     self.bootstrap_js = True
-                elif 'popper.js' in src:
+                elif "popper.js" in src:
                     self.popper_js = True
-                elif re.search(r'jquery-.+\.slim\.min\.js', src):
+                elif re.search(r"jquery-.+\.slim\.min\.js", src):
                     self.jquery = True
-        elif tag == 'link':
-            if get_attr('rel', attrs) == 'stylesheet':
-                href = get_attr('href', attrs)
-                if 'bootstrap.min.css' in href or 'bootstrap-material-design.min.css' in href:
+        elif tag == "link":
+            if get_attr("rel", attrs) == "stylesheet":
+                href = get_attr("href", attrs)
+                if (
+                    "bootstrap.min.css" in href
+                    or "bootstrap-material-design.min.css" in href
+                ):
                     self.bootstrap_css = True
-                if 'family=Roboto:300,400,500,700|Material+Icons' in href:
+                if "family=Roboto:300,400,500,700|Material+Icons" in href:
                     self.fonts_css = True
-        self.parsed += f'<{tag}'
+        self.parsed += f"<{tag}"
         for attr in attrs:
             self.parsed += f' {attr[0]}="{attr[1]}"'
-        self.parsed += '>'
+        self.parsed += ">"
 
     def handle_data(self, data):
         if data:
@@ -300,9 +312,9 @@ class ViaducParser(HTMLParser, ABC):
             self.parsed += name
 
     def handle_endtag(self, tag):
-        if tag == 'body':
+        if tag == "body":
             self.parsed += VIADUC_SCRIPT
-        self.parsed += f'</{tag}>'
+        self.parsed += f"</{tag}>"
 
 
 def re_escape(self) -> str:
@@ -328,13 +340,18 @@ def re_escape(self) -> str:
     :param self: the string
     :return: the reescaped string
     """
-    return self.replace('{{', '☾').replace('}}', '☽').replace('{', '{{').replace('}', '}}') \
-        .replace('☾', '{') \
-        .replace('☽', '}')
+    return (
+        self.replace("{{", "☾")
+        .replace("}}", "☽")
+        .replace("{", "{{")
+        .replace("}", "}}")
+        .replace("☾", "{")
+        .replace("☽", "}")
+    )
 
 
 # extension method
-curse(str, 're_escape', re_escape)
+curse(str, "re_escape", re_escape)
 
 
 class Viaduc:
@@ -342,10 +359,13 @@ class Viaduc:
     Viaduc: simplest python gui.
     """
 
-    class Api:
-        window: webview.window = None
+    hostname = "localhost"
+    port = 8501
 
-        def load(self) -> any:
+    class Api:
+        _window: Optional[webview.window.Window] = None
+
+        def load(self) -> Any:
             """
             Load callback.
             :return:
@@ -358,10 +378,10 @@ class Viaduc:
 
             :param exit_val: exit value
             """
-            self.window.destroy()
+            self._window.destroy()
             sys.exit(exit_val)
 
-        def map_vals(self, vals: []) -> dict:
+        def map_vals(self, vals: List) -> dict:
             """
             Maps the values as returned by `getVals()` to a dictionary with ids as keys.
 
@@ -371,10 +391,10 @@ class Viaduc:
             m = {}
             for v in vals:
                 try:
-                    m[v['id']] = v['val']
+                    m[v["id"]] = v["val"]
                 except KeyError as e:
-                    print('KeyError:', e, file=sys.stderr)
-                    print('KeyError:', v, file=sys.stderr)
+                    print("KeyError:", e, file=sys.stderr)
+                    print("KeyError:", v, file=sys.stderr)
             return m
 
         def print(self, *args):
@@ -385,14 +405,14 @@ class Viaduc:
         height = 600
         frameless = False
         window_transparent = False
-        window_background_color = '#fff'
+        window_background_color = "#fff"
         title: str = ""
         # The idea is that html is a single string (that can be copied from the content of a single html file that can
         # be open with the browser, debugged, tested, etc.)
         html: str = HTML
         # NOTE: Usually we want html to be a string so everything is contained in one file, however in this case we are
         # reading it from a file as an example of how it can be done.
-        file: str = None
+        file: str = ""
 
         def __init__(self, toolkit: Toolkit = BootstrapMui()):
             """
@@ -410,7 +430,9 @@ class Viaduc:
         def get_html(self):
             return self.html.re_escape().format(title=self.title, **self.toolkit.map)
 
-    def __init__(self, api: Api = Api(), presentation: Presentation = Presentation(), args=None):
+    def __init__(
+        self, api: Api = Api(), presentation: Presentation = Presentation(), args=None
+    ):
         if args is None:
             args = sys.argv
         self.frameless = False
@@ -420,72 +442,115 @@ class Viaduc:
         self.parser = ViaducParser()
 
         # parse args
-        arg_parser = argparse.ArgumentParser(description='Viaduc: simplest python GUI.')
-        arg_parser.add_argument('-x', '--debug', action='store_true', default=False, help='enable debug tools')
-        arg_parser.add_argument('--frameless', action='store_true', default=presentation.frameless,
-                                help='create a frameless window')
-        arg_parser.add_argument('--no-bootstrap', action='store_true', default=False, help='do no use bootstrap')
+        arg_parser = argparse.ArgumentParser(description="Viaduc: simplest python GUI.")
+        arg_parser.add_argument(
+            "-x",
+            "--debug",
+            action="store_true",
+            default=False,
+            help="enable debug tools",
+        )
+        arg_parser.add_argument(
+            "--frameless",
+            action="store_true",
+            default=presentation.frameless,
+            help="create a frameless window",
+        )
+        arg_parser.add_argument(
+            "--no-bootstrap",
+            action="store_true",
+            default=False,
+            help="do no use bootstrap",
+        )
+        arg_parser.add_argument(
+            "--with-streamlit", default=None, help="use streamlit command"
+        )
         parsed_args = arg_parser.parse_args(args[1:])
         self.debug = parsed_args.debug
         self.frameless = parsed_args.frameless
 
-        # parse html
-        self.parser.feed(presentation.get_html())
-        if not parsed_args.no_bootstrap:
-            if not self.parser.bootstrap_css:
-                raise RuntimeError(f'No bootstrap css found in html. See {BOOTSTRAP_TEMPLATE_URL}')
-            if not self.parser.bootstrap_js:
-                raise RuntimeError(f'No bootstrap js found in html. See {BOOTSTRAP_TEMPLATE_URL}')
-            if not self.parser.jquery:
-                raise RuntimeError(f'No jquery found in html. See {BOOTSTRAP_TEMPLATE_URL}')
+        if parsed_args.with_streamlit:
+            cmd = [
+                "streamlit",
+                "hello" if parsed_args.with_streamlit == "hello" else "run",
+                "--server.headless=True",
+                f"--logger.level={'debug' if self.debug else 'error'}",
+            ]
+            if parsed_args.with_streamlit != "hello":
+                cmd += [parsed_args.with_streamlit]
+            atexit.register(self.stop, subprocess.Popen(cmd, stdout=subprocess.DEVNULL))
+            url = f"http://{self.hostname}:{self.port}"
+            html = None
+        else:
+            url = None
+            # parse html
+            self.parser.feed(presentation.get_html())
+            html = self.parser.parsed
 
-        self.window = webview.create_window(presentation.title,
-                                            width=presentation.width,
-                                            height=presentation.height,
-                                            html=self.parser.parsed,
-                                            easy_drag=True,
-                                            js_api=api,
-                                            frameless=self.frameless,
-                                            on_top=True,
-                                            transparent=presentation.window_transparent,
-                                            background_color=presentation.window_background_color
-                                            )
+            if not parsed_args.no_bootstrap:
+                if not self.parser.bootstrap_css:
+                    raise RuntimeError(
+                        f"No bootstrap css found in html. See {BOOTSTRAP_TEMPLATE_URL}"
+                    )
+                if not self.parser.bootstrap_js:
+                    raise RuntimeError(
+                        f"No bootstrap js found in html. See {BOOTSTRAP_TEMPLATE_URL}"
+                    )
+                if not self.parser.jquery:
+                    raise RuntimeError(
+                        f"No jquery found in html. See {BOOTSTRAP_TEMPLATE_URL}"
+                    )
+
+        self.window = webview.create_window(
+            presentation.title,
+            url=url,
+            width=presentation.width,
+            height=presentation.height,
+            html=html,
+            easy_drag=True,
+            js_api=api,
+            frameless=self.frameless,
+            on_top=True,
+            transparent=presentation.window_transparent,
+            background_color=presentation.window_background_color,
+        )
 
         if api:
-            api.window = self.window
+            api._window = self.window
 
         #
         # On macOS Big Sur we need to start with the window on_top and then remove the attribute after a while.
         #
-        webview.start(self.init, (('on_top', False), ('load',)), debug=self.debug)
+        webview.start(self.init, (("on_top", False), ("load",)), debug=self.debug)
 
     def init(self, *args, **kwargs):
         for _init in args:
             f = _init[0]
-            if f == 'on_top':
+            if f == "on_top":
                 time.sleep(1)
                 self.on_top(_init[1])
-            elif f == 'load':
+            elif f == "load":
                 self.api.load()
 
     def on_top(self, value):
         self.window.on_top = value
 
     @staticmethod
+    def stop(p):
+        if os.name == "posix":
+            print("killing process", file=sys.stderr)
+            p.kill()
+        else:
+            pass
+
+    @staticmethod
     def done(msg=None):
-        return {
-            'action': 'DONE',
-            'message': msg
-        }
+        return {"action": "DONE", "message": msg}
 
     @staticmethod
     def callback(f: str, params: dict):
-        return {
-            'action': 'CALLBACK',
-            'function': f,
-            'params': params
-        }
+        return {"action": "CALLBACK", "function": f, "params": params}
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     Viaduc()

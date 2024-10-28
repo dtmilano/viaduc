@@ -10,7 +10,9 @@ from viaduc import Viaduc
 
 class Api(Viaduc.Api):
     def get_dir_name(self):
-        file_name = self.window.create_file_dialog(webview.FOLDER_DIALOG, allow_multiple=False)
+        file_name = self._window.create_file_dialog(
+            webview.FOLDER_DIALOG, allow_multiple=False
+        )
         if file_name and file_name[0]:
             return file_name[0]
 
@@ -23,26 +25,26 @@ class Api(Viaduc.Api):
 
         image_files = []
         for f in os.listdir(dir_name):
-            if f.endswith('.png') or f.endswith('.jpg') or f.endswith('.gif'):
+            if f.endswith(".png") or f.endswith(".jpg") or f.endswith(".gif"):
                 image_files.append(f)
         if not image_files:
-            raise ValueError(f'No image files in {dir_name}')
+            raise ValueError(f"No image files in {dir_name}")
 
-        return Viaduc.callback('loadDir', {'dir': dir_name, 'imageFiles': image_files})
+        return Viaduc.callback("loadDir", {"dir": dir_name, "imageFiles": image_files})
 
     def load_image(self, image):
         mime, encoding = mimetypes.guess_type(image)
-        with open(image, 'rb') as i:
+        with open(image, "rb") as i:
             data = base64.b64encode(i.read()).decode("ascii")
-            src = f'data:{mime};base64,{data}'
-            return Viaduc.callback('showImage', {'image': image, 'src': src})
+            src = f"data:{mime};base64,{data}"
+            return Viaduc.callback("showImage", {"image": image, "src": src})
 
 
 class Presentation(Viaduc.Presentation):
     width = 1200
     height = 600
-    title = 'image viewer'
-    html = '''
+    title = "image viewer"
+    html = """
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -126,8 +128,8 @@ class Presentation(Viaduc.Presentation):
 
 </body>
 </html>    
-    '''
+    """
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     Viaduc(api=Api(), presentation=Presentation(), args=sys.argv)

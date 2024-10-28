@@ -8,23 +8,30 @@ from viaduc import Viaduc
 
 class Api(Viaduc.Api):
     def open_file_dialog(self):
-        file_types = ('Text Files (*.txt;*.sh;*.md;*.py;*.c)', 'All files (*.*)')
+        file_types = ("Text Files (*.txt;*.sh;*.md;*.py;*.c)", "All files (*.*)")
 
-        file_name = self.window.create_file_dialog(webview.OPEN_DIALOG, allow_multiple=False, file_types=file_types)
+        file_name = self._window.create_file_dialog(
+            webview.OPEN_DIALOG, allow_multiple=False, file_types=file_types
+        )
         if file_name and file_name[0]:
             with open(file_name[0]) as f:
-                return Viaduc.callback('loadFile', {'fileName': file_name, 'content': f.read()})
+                return Viaduc.callback(
+                    "loadFile", {"fileName": file_name, "content": f.read()}
+                )
         else:
             return Viaduc.done()
 
     def save_file_dialog(self, vals):
         v = self.map_vals(vals)
 
-        file_name = self.window.create_file_dialog(webview.SAVE_DIALOG, directory=os.path.dirname(v['_fileName']),
-                                                   save_filename=os.path.basename(v['_fileName']))
+        file_name = self._window.create_file_dialog(
+            webview.SAVE_DIALOG,
+            directory=os.path.dirname(v["_fileName"]),
+            save_filename=os.path.basename(v["_fileName"]),
+        )
         if file_name:
             with open(file_name, "w+") as f:
-                f.write(v['_editor'])
+                f.write(v["_editor"])
 
         return Viaduc.done()
 
@@ -32,8 +39,8 @@ class Api(Viaduc.Api):
 class Presentation(Viaduc.Presentation):
     width = 800
     height = 600
-    title = 'editor'
-    html = '''
+    title = "editor"
+    html = """
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -147,8 +154,8 @@ class Presentation(Viaduc.Presentation):
 
 </body>
 </html>    
-    '''
+    """
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     Viaduc(api=Api(), presentation=Presentation(), args=sys.argv)

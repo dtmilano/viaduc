@@ -11,20 +11,22 @@ def fahrenheit_to_celsius(fahrenheit):
 class Api(Viaduc.Api):
     def convert(self, vals):
         v = self.map_vals(vals)
-        if not v['_fahrenheit']:
-            raise ValueError('Enter a temperature')
-        return Viaduc.callback('showCelsius', {'celsius': fahrenheit_to_celsius(v['_fahrenheit'])})
+        if not v["_fahrenheit"]:
+            raise ValueError("Enter a temperature")
+        return Viaduc.callback(
+            "showCelsius", {"celsius": fahrenheit_to_celsius(v["_fahrenheit"])}
+        )
 
 
 class Presentation(Viaduc.Presentation):
     width = 320
     height = 468
-    title = 'temperature converter'
-    html = '''
+    title = "temperature converter"
+    html = """
     <!-- copy file here -->
-    '''
+    """
     file = "temperature-converter.html"
 
 
-if __name__ == '__main__':
-    Viaduc(api=Api(), presentation=Presentation(), args=sys.argv + ['--frameless'])
+if __name__ == "__main__":
+    Viaduc(api=Api(), presentation=Presentation(), args=sys.argv + ["--frameless"])

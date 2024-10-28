@@ -6,13 +6,13 @@ from viaduc import Viaduc
 class Api(Viaduc.Api):
     def get_vals(self, vals):
         v = self.map_vals(vals)
-        return Viaduc.done(f'vals: {v}')
+        return Viaduc.done(f"vals: {v}")
 
 
 class Presentation(Viaduc.Presentation):
-    title = 'radios'
+    title = "radios"
     height = 440
-    html = '''
+    html = """
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -82,8 +82,8 @@ class Presentation(Viaduc.Presentation):
 
   </body>  
  </html>
-'''
+"""
 
 
-if __name__ == '__main__':
-    Viaduc(api=Api(), presentation=Presentation(), args=['', '--debug'])
+if __name__ == "__main__":
+    Viaduc(api=Api(), presentation=Presentation(), args=["", "--debug"])

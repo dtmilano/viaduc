@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {{bootstrap_meta}}
+    {{bootstrap_mui_css}}
+    <title>{{title}}</title>
+</head>
+<body style="overflow: hidden">
+
+<div id="content" style="overflow: hidden">
+    <div id="screenshot-container" style="overflow: hidden;">
+        <img id="screenshot" src="" style="object-fit: contain; overflow: hidden; max-width:  ">
+    </div>
+</div>
+
+<div class="dropdown-menu dropdown-menu-sm" id="context-menu">
+    <a class="dropdown-item" onclick="pressBack();">Back</a>
+    <div class="dropdown-divider"></div>
+    <a class="dropdown-item" onclick="pywebview.api.close();">Quit</a>
+</div>
+
+{{bootstrap_mui_js}}
+
+<script>
+    window.addEventListener('pywebviewready', function() {
+
+        $('#content')
+            .on('contextmenu', showContextMenu)
+            .on('click', hideContextMenu)
+            .on('click', deviceClick);
+
+        $('#context-menu a')
+            .on('click', hideContextMenu);
+
+        obtainScreenshot();
+    })
+
+    function showContextMenu(e) {
+        var top = Math.max(0, e.pageY - 10);
+        var left = Math.max(0, e.pageX - 90);
+        $('#context-menu').css({
+          display: 'block',
+          top: top,
+          left: left
+        }).addClass('show');
+        return false;
+    }
+
+    function hideContextMenu(e) {
+        $('#context-menu').removeClass('show').hide();
+    }
+
+    function obtainScreenshot() {
+        setTimeout(() => {
+        pywebview.api.obtain_screenshot()
+            .then(function(response) {
+                var s = $('#screenshot');
+                s.css({'max-width': response.w, 'max-height': response.h });
+                s.attr('src', response.screenshot);
+            })
+            .catch((e) => {
+                doAlert('alert-error', 'error', e);
+            });
+            }, 500);
+    }
+
+    function pressBack() {
+        pywebview.api.press_back()
+            .then(obtainScreenshot)
+            .catch(function(e) {
+                doAlert('alert-error', 'error', e);
+            });
+    }
+
+    function deviceClick(e) {
+        pywebview.api.click(e.pageX * 4, e.pageY * 4)
+            .then(obtainScreenshot)
+            .catch(function(e) {
+                doAlert('alert-error', 'error', e);
+            });
+    }
+</script>
+
+</body>
+</html>

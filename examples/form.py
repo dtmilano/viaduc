@@ -7,19 +7,19 @@ from viaduc import Viaduc
 class Api(Viaduc.Api):
     def do_something(self, vals):
         v = self.map_vals(vals)
-        if not v['_email']:
-            raise ValueError('Empty email')
-        if not v['_password']:
-            raise ValueError('Empty password')
+        if not v["_email"]:
+            raise ValueError("Empty email")
+        if not v["_password"]:
+            raise ValueError("Empty password")
         print(v)
-        return Viaduc.done('Operation completed')
+        return Viaduc.done("Operation completed")
 
 
 class Presentation(Viaduc.Presentation):
     width = 800
     height = 560
-    title = 'form example'
-    html = '''
+    title = "form example"
+    html = """
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -80,8 +80,8 @@ class Presentation(Viaduc.Presentation):
 </script>
 </body>
 </html>
-    '''
+    """
 
 
-if __name__ == '__main__':
-    Viaduc(api=Api(), presentation=Presentation(), args=sys.argv + ['--frameless'])
+if __name__ == "__main__":
+    Viaduc(api=Api(), presentation=Presentation(), args=sys.argv + ["--frameless"])

@@ -4,9 +4,9 @@ from viaduc import Viaduc
 
 
 class Presentation(Viaduc.Presentation):
-    title = 'process response'
+    title = "process response"
     height = 360
-    html = '''
+    html = """
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -42,8 +42,8 @@ class Presentation(Viaduc.Presentation):
 
   </body>  
  </html>
-'''
+"""
 
 
-if __name__ == '__main__':
-    Viaduc(presentation=Presentation(), args=['', '--debug'])
+if __name__ == "__main__":
+    Viaduc(presentation=Presentation(), args=["", "--debug"])

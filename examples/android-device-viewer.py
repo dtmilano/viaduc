@@ -20,27 +20,38 @@ class Culebratester:
 
     def __init__(self):
         configuration = culebratester_client.configuration.Configuration()
-        self.api_instance = culebratester_client.DefaultApi(culebratester_client.ApiClient(configuration))
+        self.api_instance = culebratester_client.DefaultApi(
+            culebratester_client.ApiClient(configuration)
+        )
 
     def culebra_info(self):
         try:
             return self.api_instance.culebra_info_get()
         except Exception as e:
-            raise RuntimeError("Exception when calling DefaultApi->culebra_info_get: %s\n" % e)
+            raise RuntimeError(
+                "Exception when calling DefaultApi->culebra_info_get: %s\n" % e
+            )
 
     def get_display_real_size(self):
         try:
             return self.api_instance.device_display_real_size_get()
         except Exception as e:
-            raise RuntimeError("Exception when calling DefaultApi->device_display_real_size_get: %s\n" % e)
+            raise RuntimeError(
+                "Exception when calling DefaultApi->device_display_real_size_get: %s\n"
+                % e
+            )
 
     def screenshot(self, scale, quality):
         try:
-            api_response = self.api_instance.ui_device_screenshot_get(scale=scale, quality=quality)
+            api_response = self.api_instance.ui_device_screenshot_get(
+                scale=scale, quality=quality
+            )
             stream = io.BytesIO(api_response.data)
             return stream.read()
         except Exception as e:
-            raise RuntimeError("Exception when calling DefaultApi->ui_device_screenshot_get: %s\n" % e)
+            raise RuntimeError(
+                "Exception when calling DefaultApi->ui_device_screenshot_get: %s\n" % e
+            )
 
     def encode_screenshot(self, scale=1.0, quality=100):
         return f'data:image/png;base64,{base64.b64encode(self.screenshot(scale, quality)).decode("ascii")}'
@@ -49,13 +60,17 @@ class Culebratester:
         try:
             return json.dumps(self.api_instance.ui_device_press_back_get().__dict__)
         except Exception as e:
-            raise RuntimeError("Exception when calling DefaultApi->ui_device_press_back_get: %s\n" % e)
+            raise RuntimeError(
+                "Exception when calling DefaultApi->ui_device_press_back_get: %s\n" % e
+            )
 
     def click(self, x, y):
         try:
             return json.dumps(self.api_instance.ui_device_click_get(x, y).__dict__)
         except Exception as e:
-            raise RuntimeError("Exception when calling DefaultApi->ui_device_click_get: %s\n" % e)
+            raise RuntimeError(
+                "Exception when calling DefaultApi->ui_device_click_get: %s\n" % e
+            )
 
 
 culebratester = Culebratester()
@@ -64,8 +79,11 @@ culebratester = Culebratester()
 class Api(Viaduc.Api):
     def obtain_screenshot(self):
         display_real_size = culebratester.get_display_real_size()
-        return {'screenshot': culebratester.encode_screenshot(), 'w': display_real_size.x / 4,
-                'h': display_real_size.y / 4}
+        return {
+            "screenshot": culebratester.encode_screenshot(),
+            "w": display_real_size.x / 4,
+            "h": display_real_size.y / 4,
+        }
 
     def press_back(self):
         return culebratester.press_back()
@@ -74,7 +92,7 @@ class Api(Viaduc.Api):
         return culebratester.click(x, y)
 
 
-HTML = '''
+HTML = """
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -171,18 +189,18 @@ HTML = '''
 
 </body>
 </html>   
-    '''
+    """
 
 
 class Presentation(Viaduc.Presentation):
     html = HTML
-    title = 'android device viewer'
+    title = "android device viewer"
     frameless = True
-    window_background_color = '#000'
+    window_background_color = "#000"
     display_real_size = culebratester.get_display_real_size()
     width = display_real_size.x / 4
     height = display_real_size.y / 4
 
 
-if __name__ == '__main__':
-    Viaduc(api=Api(), presentation=Presentation(), args=sys.argv + ['--debug'])
+if __name__ == "__main__":
+    Viaduc(api=Api(), presentation=Presentation(), args=sys.argv + ["--debug"])

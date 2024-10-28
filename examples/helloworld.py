@@ -4,8 +4,8 @@ from viaduc import Viaduc
 
 
 class Presentation(Viaduc.Presentation):
-    title = 'hello world'
-    html = '''
+    title = "hello world"
+    html = """
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -25,8 +25,8 @@ class Presentation(Viaduc.Presentation):
 
   </body>  
  </html>
-'''
+"""
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     Viaduc(presentation=Presentation())

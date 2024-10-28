@@ -10,12 +10,12 @@ from viaduc import Viaduc
 
 def plot() -> str:
     plt.figure(figsize=[5, 4])
-    t = np.arange(-2, 2, .01)
+    t = np.arange(-2, 2, 0.01)
     y1 = 2 * np.sin(2 * np.pi * t)
     y2 = 2 * np.cos(2 * np.pi * t)
     plt.plot(y1)
     plt.plot(y2)
-    plt.axis('on')
+    plt.axis("on")
     buf = io.BytesIO()
     plt.savefig(buf, format="svg")
     buf.seek(0)
@@ -34,8 +34,8 @@ class Api(Viaduc.Api):
 class Presentation(Viaduc.Presentation):
     width = 480
     height = 480
-    title = 'plot'
-    html = '''
+    title = "plot"
+    html = """
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -77,8 +77,8 @@ class Presentation(Viaduc.Presentation):
 
 </body>
 </html>    
-    '''
+    """
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     Viaduc(api=Api(), presentation=Presentation(), args=sys.argv)

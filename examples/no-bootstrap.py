@@ -7,8 +7,8 @@ from viaduc import Viaduc
 
 class Presentation(Viaduc.Presentation):
     width = height = 300
-    title = 'no bootstrap'
-    html = '''
+    title = "no bootstrap"
+    html = """
 <!DOCTYPE html>
   <head>
     <title>{{title}}</title>
@@ -17,8 +17,10 @@ class Presentation(Viaduc.Presentation):
     <div style="font-size: 15em; margin: auto; width: 50%;">V</div>
   </body>  
 </html>
-'''
+"""
 
 
-if __name__ == '__main__':
-    Viaduc(presentation=Presentation(), args=sys.argv + ['--no-bootstrap', '--frameless'])
+if __name__ == "__main__":
+    Viaduc(
+        presentation=Presentation(), args=sys.argv + ["--no-bootstrap", "--frameless"]
+    )
