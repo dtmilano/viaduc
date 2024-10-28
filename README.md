@@ -154,7 +154,6 @@ Also provides a context menu to be able to send BACK or quit the app.
 Im case you don't need or want **bootstrap** to be included you can pass the option `--no-bootstrap` and **viaduc** won't
 complain if the components are missing.
 
-💁  &nbsp; viaduc >= 2.0.3 is required for this feature
 
 ```
 Viaduc(presentation=Presentation(), args=sys.argv + ['--no-bootstrap'])
@@ -166,6 +165,8 @@ See [no-bootstrap.py](./examples/no-bootstrap.py).
 
 # with streamlit
 In case you are into [streamlit](https://streamlit.io/) and want to use your app without a web browser, you can pass the option `--with-streamlit=YOUR-APP.py` or to see streamlit's demo you can use `--with-streamlit=hello`.
+
+💁  &nbsp; viaduc >= 2.0.3 is required for this feature
 
 Here is an example of the latter
 
