@@ -5,7 +5,7 @@ set -u
 
 dry_run=
 
-eval $(grep 'VERSION *=' setup.py | tr '[:upper:]' '[:lower:]' | sed 's/ *= */=/')
+eval $(grep 'version *=' setup.cfg | tr '[:upper:]' '[:lower:]' | sed 's/ *= */=/')
 tag="v$version"
 title="v$version"
 $dry_run git tag "$tag" || printf 'WARNING: tag "%s" already exists\n' "$tag"
