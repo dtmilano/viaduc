@@ -15,6 +15,14 @@ See the code for this example [here](./examples/form.py).
 $ pip install viaduc
 ```
 
+## development
+
+To install a development version run
+
+```
+pip install git+https://github.com/dtmilano/viaduc
+```
+
 # simplest
 The simplest Viaduc program instantiates a `Viaduc` object, like this ([simplest.py](./examples/simplest.py))
 
