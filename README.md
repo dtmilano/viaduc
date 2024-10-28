@@ -154,3 +154,19 @@ See [no-bootstrap.py](./examples/no-bootstrap.py).
 
 ![no bootstrap](./screenshots/no-bootstrap.png)
 
+# with streamlit
+In case you are into [streamlit](https://streamlit.io/) and want to use your app without a web browser, you can pass the option `--with-streamlit=YOUR-APP.py` or to see streamlit's demo you can use `--with-streamlit=hello`.
+
+Here is an example of the latter
+
+![streamlit hello](./screenshots/with-streamlit.png)
+
+See [with-streamlit.py](./examples/with-streamlit.py).
+
+Also included in these examples, a *columns* demo
+
+![streamlit columns](./screenshots/with-streamlit-columns.png)
+
+
+See [with-streamlit-columns.py](./examples/with-streamlit-columns.py) and [columns.py](./examples/columns.py).
+
