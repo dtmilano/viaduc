@@ -19,13 +19,16 @@ limitations under the License.
 @author: Diego Torres Milano
 """
 
-__version__ = "2.0.5"
+__version__ = "2.1.0"
 
 import argparse as argparse
 import re
 import sys
 import os
 import time
+import logging
+import urllib.request
+import urllib.error
 from abc import ABC
 from html.parser import HTMLParser
 
@@ -34,6 +37,14 @@ from forbiddenfruit import curse
 import subprocess
 import atexit
 from typing import Any, List, Optional
+
+# Configure logging if VIADUC_LOG environment variable is set
+if os.environ.get("VIADUC_LOG"):
+    logging.basicConfig(
+        filename=os.environ["VIADUC_LOG"],
+        level=logging.DEBUG,
+        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    )
 
 BOOTSTRAP_TEMPLATE_URL = (
     "https://getbootstrap.com/docs/4.0/getting-started/introduction/"
@@ -370,6 +381,7 @@ class Viaduc:
             Load callback.
             :return:
             """
+            logging.debug("Api.load called")
             return None
 
         def close(self, exit_val=0):
@@ -378,6 +390,7 @@ class Viaduc:
 
             :param exit_val: exit value
             """
+            logging.debug(f"Api.close called with exit_val={exit_val}")
             self._window.destroy()
             sys.exit(exit_val)
 
@@ -420,19 +433,26 @@ class Viaduc:
 
             :param toolkit: the toolkit used by this presentation (i.e. BootstrapMui)
             """
+            logging.debug(f"Presentation.__init__ started with toolkit={type(toolkit).__name__}")
             # read file if necessary
             if self.file:
+                logging.debug(f"Reading HTML from file: {self.file}")
                 with open(self.file) as f:
                     self.html = f.read()
 
             self.toolkit = toolkit
+            logging.debug("Presentation.__init__ completed")
 
         def get_html(self):
-            return self.html.re_escape().format(title=self.title, **self.toolkit.map)
+            logging.debug("Presentation.get_html called")
+            result = self.html.re_escape().format(title=self.title, **self.toolkit.map)
+            logging.debug(f"Presentation.get_html returning HTML of length {len(result)}")
+            return result
 
     def __init__(
         self, api: Api = Api(), presentation: Presentation = Presentation(), args=None
     ):
+        logging.debug("Viaduc.__init__ started")
         if args is None:
             args = sys.argv
         self.frameless = False
@@ -470,6 +490,7 @@ class Viaduc:
         self.frameless = parsed_args.frameless
 
         if parsed_args.with_streamlit:
+            logging.debug(f"Using streamlit mode: {parsed_args.with_streamlit}")
             cmd = [
                 "streamlit",
                 "hello" if parsed_args.with_streamlit == "hello" else "run",
@@ -478,14 +499,19 @@ class Viaduc:
             ]
             if parsed_args.with_streamlit != "hello":
                 cmd += [parsed_args.with_streamlit]
+            logging.debug(f"Streamlit command: {' '.join(cmd)}")
             atexit.register(self.stop, subprocess.Popen(cmd, stdout=subprocess.DEVNULL))
             url = f"http://{self.hostname}:{self.port}"
+            logging.debug(f"Streamlit URL: {url}")
+            self._wait_for_server(url)
             html = None
         else:
+            logging.debug("Using HTML mode")
             url = None
             # parse html
             self.parser.feed(presentation.get_html())
             html = self.parser.parsed
+            logging.debug(f"HTML parsed, length: {len(html)} characters")
 
             if not parsed_args.no_bootstrap:
                 if not self.parser.bootstrap_css:
@@ -501,6 +527,9 @@ class Viaduc:
                         f"No jquery found in html. See {BOOTSTRAP_TEMPLATE_URL}"
                     )
 
+        logging.debug(
+            f"create_window parameters: title={presentation.title}, url={url}, width={presentation.width}, height={presentation.height}, frameless={self.frameless}, transparent={presentation.window_transparent}, background_color={presentation.window_background_color}"
+        )
         self.window = webview.create_window(
             presentation.title,
             url=url,
@@ -521,9 +550,24 @@ class Viaduc:
         #
         # On macOS Big Sur we need to start with the window on_top and then remove the attribute after a while.
         #
+        logging.debug("Viaduc.__init__ completed, starting webview")
         webview.start(self.init, (("on_top", False), ("load",)), debug=self.debug)
 
+    def _wait_for_server(self, url, timeout=30):
+        """Wait for server to be ready by checking if URL is accessible."""
+        logging.debug(f"Waiting for server at {url} to be ready")
+        start_time = time.time()
+        while time.time() - start_time < timeout:
+            try:
+                urllib.request.urlopen(url, timeout=1)
+                logging.debug(f"Server at {url} is ready")
+                return
+            except (urllib.error.URLError, OSError):
+                time.sleep(0.5)
+        logging.warning(f"Server at {url} not ready after {timeout}s timeout")
+
     def init(self, *args, **kwargs):
+        logging.debug("Viaduc.init started")
         for _init in args:
             f = _init[0]
             if f == "on_top":
@@ -531,6 +575,7 @@ class Viaduc:
                 self.on_top(_init[1])
             elif f == "load":
                 self.api.load()
+        logging.debug("Viaduc.init completed")
 
     def on_top(self, value):
         self.window.on_top = value
