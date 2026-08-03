@@ -181,3 +181,61 @@ Also included in these examples, a *columns* demo
 
 See [with-streamlit-columns.py](./examples/with-streamlit-columns.py) and [columns.py](./examples/columns.py).
 
+# with Claude
+
+If you use [Claude Code](https://claude.com/claude-code) (or any other agent reading a `CLAUDE.md`), you can teach it
+how to create a stand-alone **viaduc** application by adding the following instructions to your `CLAUDE.md`.
+
+````markdown
+## Python instructions
+
+1. use python 3.12
+2. for a streamlit app use this shebang on macOS
+
+   ```python
+   #! /usr/bin/env streamlit run [--server.port=XXXX] ...
+
+   # streamlit python code here...
+   ```
+
+## Streamlit instructions
+
+1. API docs can be found at https://docs.streamlit.io/
+
+## Viaduc rules
+
+REMEMBER: Viaduc is NOT an API client, it is a UI framework
+
+1. viaduc is a python package to create simple UIs
+2. When we are referring to "viaduc" (no final "t") we refer to https://github.com/dtmilano/viaduc
+3. viaduc can be installed from pypi using `pip install viaduc`
+4. to use viaduc and streamlit together there are some examples at
+   https://github.com/dtmilano/viaduc?tab=readme-ov-file#with-streamlit
+5. to convert a streamlit app that runs in the browser to a standalone viaduc python app use this pattern,
+   where `APP.py` is the APP being converted:
+
+   ```python
+   #! /usr/bin/env python3
+
+   import sys
+
+   from viaduc import Viaduc
+
+
+   class Presentation(Viaduc.Presentation):
+       width = 800
+       height = 600
+       title = "APP TITLE"
+
+
+   if __name__ == "__main__":
+       Viaduc(presentation=Presentation(), args=sys.argv + ["--with-streamlit=APP.py"])
+   ```
+
+6. the viaduc launcher and the streamlit app are two separate files: keep the streamlit code in `APP.py` and
+   put only the `Presentation` and the `Viaduc(...)` call in the launcher
+7. viaduc runs `streamlit run` itself and connects to `http://localhost:8501`, so keep streamlit on its default
+   port when running under viaduc (the shebang's `--server.port` is only used when the app is run directly)
+8. run the standalone app with `python3 launcher.py`, and add `--debug` to see viaduc's and streamlit's logs
+````
+
